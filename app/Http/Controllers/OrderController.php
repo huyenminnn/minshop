@@ -37,7 +37,8 @@ class OrderController extends Controller
         } else {
             return Datatables::of($orders)
             ->addColumn('action', function ($order) {
-                return '<button type="button" class="btn btn-success btn-show" data-id="'.$order->id.'">Detail</button>';
+                return '<button type="button" class="btn btn-success btn-show" data-id="'.$order->id.'">Detail</button>
+                    <button type="button" class="btn btn-danger btn-delete" data-id="'.$order->id.'">Delete</button>';
             })->make(true);
         } 
         

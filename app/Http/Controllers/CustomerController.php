@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Http\Requests\CustomerRequest;
 use App\Customer;
 class CustomerController extends Controller
 {
@@ -21,10 +23,29 @@ class CustomerController extends Controller
         $customers = Customer::get();
         return Datatables::of($customers)
             ->addColumn('action', function ($customer) {
-                return '<button type="button" class="btn btn-success btn-show" data-id="'.$customer->id.'">Detail</button>
-                        <button type="button" class="btn btn-warning btn-edit" data-id="'.$customer->id.'">Edit</button>
+                $data = '<button type="button" class="btn btn-success btn-show" data-id="'.$customer->id.'">Detail</button>';
+                if (Auth::user()->can(['edit-customer', 'delete-customer'])) {
+                    $data .= '<button type="button" class="btn btn-warning btn-edit" data-id="'.$customer->id.'">Edit</button>
                         <button type="button" class="btn btn-danger btn-delete" data-id="'.$customer->id.'">Delete</button>';
-            })->make(true);
+                }
+                return $data;
+            })
+            ->editColumn('avatar', function($customer) {
+                if ($customer->avatar == 'none') {
+                    $customer->avatar = 'avatars/default-profile.png';
+                }
+                return '<img style="width: 100px;height: 100px;" src="/storage/'.$customer->avatar.'" class="img img-circle" >';
+            })
+            ->editColumn('level', function($customer) {
+                $level = ['Thành viên','Thành viên Bạc','Thành viên Vàng','Thành viên Kim cương'];
+                foreach ($level as $key => $value) {
+                    if ($customer->level == $key) {
+                        return $value;
+                    }
+                }
+            })
+            ->rawColumns(['avatar','action','created_at','updated_at'])
+            ->make(true);
     }
     /**
      * Show the form for creating a new resource.
@@ -42,9 +63,22 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
-        //
+        $customer = new Customer();
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        $customer->gender = $request->gender;
+        $customer->address = $request->address;
+        $customer->mobile = $request->mobile;
+        $customer->level = 0;
+        $customer->password = Hash::make('000000');
+        if ($request->avatar == '') {
+            $avatar = 'avatars/default-profile.png';
+        } else $avatar = $request->avatar->storeAs('avatars',$request->avatar->getClientOriginalName());
+        $customer->avatar = $avatar;
+        $customer->save();
+        return $customer;
     }
 
     /**
@@ -55,7 +89,14 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+        $customer = Customer::find($id);
+        $level = ['Thành viên','Thành viên Bạc','Thành viên Vàng','Thành viên Kim cương'];
+        foreach ($level as $key => $value) {
+            if ($customer->level == $key) {
+                $customer->level = $value;
+            }
+        }
+        return $customer; 
     }
 
     /**
@@ -76,9 +117,28 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CustomerRequest $request, $id)
     {
-        //
+        $customer=Customer::find($id);
+        if ($request->avatar == 'none') {
+            $customer->update([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'gender'=>$request->gender,
+                'address'=>$request->address,
+                'mobile'=>$request->mobile,
+            ]);
+        } else{
+            $thumb = $request->avatar->storeAs('avatar',$request->avatar->getClientOriginalName());
+            $customer->update([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'gender'=>$request->gender,
+                'address'=>$request->address,
+                'mobile'=>$request->mobile,
+                'avatar'=>$thumb,
+            ]);
+        }
     }
 
     /**
@@ -89,6 +149,7 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Customer::find($id)->delete();
+        return response()->json(['data'=>'removed']);
     }
 }

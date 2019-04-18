@@ -9,6 +9,8 @@ use App\Category;
 use App\User;
 use App\Branch;
 use App\OptionValue;
+use App\Role;
+use App\Product;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,11 +34,17 @@ class AppServiceProvider extends ServiceProvider
         $branches = Branch::get();
         View::share('branches', $branches);
 
-        $size = OptionValue::where('option_id', 1)->get();
-        View::share('sizes', $size);
+        $sizes = OptionValue::where('option_id', 1)->get();
+        View::share('sizes', $sizes);
 
         $color = OptionValue::where('option_id', 2)->get();
         View::share('colors', $color);
+
+        $role = Role::get();
+        View::share('roles', $role);
+
+        $products = Product::orderBy('id', 'desc')->get();
+        View::share('products', $products);
     }
 
     /**

@@ -1,10 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-use Yajra\Datatables\Datatables;
 
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\User;
+use App\Role;
+
 class UserController extends Controller
 {
     /**
@@ -27,12 +33,23 @@ class UserController extends Controller
                         <button type="button" class="btn btn-danger btn-delete" data-id="'.$user->id.'">Delete</button>';
             })
             ->editColumn('avatar', function($user) {
-                    return '<img style="width: 100px;height: 100px;" src="/storage/'.$user->avatar.'">';
+                    return '<img style="width: 100px;height: 100px;" src="/storage/'.$user->avatar.'" class="img-circle">';
             })
-            
-            ->rawColumns(['avatar','action'])
+            ->editColumn('created_at', function($user){
+                    return $user->created_at->format('H:i:s | d/m/Y');
+            })
+            ->editColumn('role', function($user) {
+                    $roles = $user->roles;
+                    $data = '';
+                    foreach ($roles as $key => $value) {
+                        $data = $value->display_name;
+                    }
+                    return $data;
+            })
+            ->rawColumns(['avatar','action','role','created_at'])
             ->make(true);
     }
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -49,9 +66,23 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(UserRequest $request)
+    {   
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        
+        $user->password = Hash::make('000000');
+        if ($request->avatar == '') {
+            $avatar = 'avatars/default-profile.png';
+        } else $avatar = $request->avatar->storeAs('avatars',$request->avatar->getClientOriginalName());
+        $user->avatar = $avatar;
+        $user->save();
+
+        $role = Role::find($request->role);
+        $newUser = User::where('email',$request->email)->first();
+        $newUser->attachRole($role);
+        return $user;
     }
 
     /**
@@ -62,7 +93,14 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        $user->created = $user->created_at->format('H:i:s | d/m/Y');
+        $user->updated = $user->updated_at->format('H:i:s | d/m/Y');
+
+        $role = $user->roles->first();
+        $user->role = $role->id;
+        
+        return $user;
     }
 
     /**
@@ -83,9 +121,28 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(UserRequest $request, $id)
+    {    
+        $user=User::find($id);
+        if ($request->avatar == 'none') {
+            $user->update([
+                'name'=>$request->name,
+                'email'=>$request->email
+            ]);
+        } else{
+            $thumb = $request->avatar->storeAs('avatar',$request->avatar->getClientOriginalName());
+            $user->update([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'avatar'=>$thumb,
+            ]);
+        }
+        // $user->roles()->updateExistingPivot($request->role, ['role_id'=>$request->role]);
+        
+        DB::table('role_user')
+            ->where('user_id', $user->id)
+            ->update(['role_id' => $request->role]);
+        return $user;
     }
 
     /**
@@ -96,6 +153,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::find($id)->delete();
+        return response()->json(['data'=>'removed']);
     }
 }

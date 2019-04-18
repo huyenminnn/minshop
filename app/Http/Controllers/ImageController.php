@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Image;
 
 class ImageController extends Controller
 {
@@ -21,7 +22,18 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $images = $request->file('file');
         foreach ($images as $key => $value) {
@@ -34,17 +46,6 @@ class ImageController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -52,7 +53,8 @@ class ImageController extends Controller
      */
     public function show($id)
     {
-        //
+        $images = Image::where('product_id',$id)->get();
+        return $images;
     }
 
     /**
@@ -86,6 +88,7 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $img = Image::find($id)->delete();
+        return response()->json(['data'=>'removed']);
     }
 }

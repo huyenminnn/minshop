@@ -11,21 +11,6 @@
 |
 */
 
-
-// Route::get('/images',function(){
-//     return view('manager.test');
-// });
-// Route::post('/upload-image','ProductController@uploadImage');
-
-Route::post('/deleteImg','ProductController@deleteImage');
-
-//cho nguoi dung (customer)
-// Auth::routes();
-Route::get('login', 'AuthCustomer\LoginController@showLoginForm')->name('customer-login');
-Route::post('login', 'AuthCustomer\LoginController@login');
-Route::post('logout', 'AuthCustomer\LoginController@logout')->name('customer-logout');
-
-
 //cho admin
 Route::prefix('admin')->group(function(){
 
@@ -40,40 +25,91 @@ Route::prefix('admin')->group(function(){
         Route::get('/product_showedit/{id}','ProductController@edit');
         Route::resource('/product','ProductController');
 
-        Route::post('/upload-image','ImageController@create');
+        
+        Route::get('/detailProduct_edit/{id}','ProductDetailController@edit');
+        Route::post('/product_detail_edit/{id}','ProductDetailController@update');
+        Route::resource('/detailProduct','ProductDetailController');
 
+        Route::resource('/image','ImageController');
 
-        Route::get('/order/{type}','OrderController@index')->name('getOrder');
-        Route::get('/getOrder/{type}','OrderController@getData');
-        Route::resource('/order','OrderController');
+        
 
         Route::get('/getBranch','BranchController@getData');
         Route::get('/branch_showedit/{id}','BranchController@edit');
         Route::post('/branch_edit/{id}','BranchController@update');
         Route::resource('/branch','BranchController');
 
-        Route::get('/getEmployee','EmployeeController@getData');
-        Route::post('/employee_edit/{id}','EmployeeController@update');
-        Route::resource('/employee','EmployeeController');
+        
 
-        Route::get('/getCoupon','CouponController@getData');
-        Route::post('/coupon_edit/{id}','CouponController@update');
-        Route::resource('/coupon','CouponController');
+        Route::group(['middleware' => 'role:super-admin'], function () {
+            Route::get('/getUser','UserController@getData');
+            Route::post('/user_edit/{id}','UserController@update');
+            Route::resource('/user','UserController');
 
-        Route::get('/getUser','UserController@getData');
-        Route::resource('/user','UserController');
+            Route::post('/role_edit/{id}','RoleController@update');
+            Route::get('/getRole','RoleController@getData');
+            Route::resource('/role','RoleController');
 
-        Route::get('/getCategory','CategoryController@getData');
-        Route::post('/category_edit/{id}','CategoryController@update');
-        Route::resource('/category','CategoryController');
+            Route::post('/permission_edit/{id}','PermissionController@update');
+            Route::get('/getPermission','PermissionController@getData');
+            Route::resource('/permission','PermissionController');
 
-        Route::get('/getCustomer','CustomerController@getData');
-        Route::resource('/customer','CustomerController');
+            Route::get('/permission-of-role/{id}', 'RoleController@getPermission');
 
-        Route::get('/getOption','OptionController@getData');
-        Route::resource('/option','OptionController');
+            Route::get('/changeRolePerms/{id}','RoleController@changeRolePerms');
+        });
 
-        Route::get('/getOptionValue','OptionValueController@getData');
-        Route::resource('/option-value','OptionValueController');
+        Route::group(['middleware' => 'role:super-admin|manager'], function () {
+            Route::get('/getEmployee','EmployeeController@getData');
+            Route::post('/employee_edit/{id}','EmployeeController@update');
+            Route::resource('/employee','EmployeeController');
+
+            Route::get('/getCustomer','CustomerController@getData');
+            Route::post('/customer_edit/{id}','CustomerController@update');
+            Route::resource('/customer','CustomerController');
+        });
+
+        Route::group(['middleware' => 'role:super-admin|editor|sale-manager'], function () {
+            Route::get('/getCoupon','CouponController@getData');
+            Route::post('/coupon_edit/{id}','CouponController@update');
+            Route::resource('/coupon','CouponController');
+
+            Route::get('/getCategory','CategoryController@getData');
+            Route::post('/category_edit/{id}','CategoryController@update');
+            Route::resource('/category','CategoryController');
+
+            Route::get('/order/{type}','OrderController@index')->name('getOrder');
+            Route::get('/getOrder/{type}','OrderController@getData');
+            Route::resource('/order','OrderController');
+        });
     });
+});
+
+
+//cho nguoi dung (customer)
+// Auth::routes();
+// Route::get('login', 'AuthCustomer\LoginController@showLoginForm')->name('customer-login');
+Route::post('/login', 'AuthCustomer\LoginController@login');
+Route::post('/logout', 'AuthCustomer\LoginController@logout')->name('customer-logout');
+Route::get('/home', function() {
+    return view('sale.home');
+});
+Route::get('register', 'AuthCustomer\RegisterController@showRegistrationForm')->name('register');
+Route::post('register', 'AuthCustomer\RegisterController@register');
+Route::get('/info/{id}', 'ProductController@showInfoProduct');
+
+Route::prefix('cart')->group(function(){
+    Route::get('/add', 'CartController@add');
+});
+Route::get('/test',function(){
+    // dd(Cart::content());
+
+    // Cart::update(Cart::content()[0])
+    // Cart::add('293ad', 'Product 1', 1, 9.99, ['size' => 'large']);
+    // 
+    $user = App\Role::find(1);
+    foreach ($user->permissions as $value) {
+        echo($value->pivot->role_id);
+    }
+    // dd($user->permissions());
 });

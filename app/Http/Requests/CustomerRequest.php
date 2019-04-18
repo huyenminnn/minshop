@@ -13,7 +13,7 @@ class CustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,29 @@ class CustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'=>'required',
+            'email'=>'required|email|unique:customers,email,'.$this->id,
+            'gender'=>'required',
+            'address'=>'required',
+            'mobile'=>'required',
+        ];
+    }
+
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required' => 'Name is required!',
+            'email.required' => 'Email is required!',
+            'email.unique' => 'Email is unique!',
+            'gender.required' => 'Gender is required!',
+            'address.required' => 'Address is required!',
+            'mobile.required' => 'Mobile is required!'
         ];
     }
 }

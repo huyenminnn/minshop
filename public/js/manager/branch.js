@@ -30,6 +30,7 @@ $(document).ready(function () {
 
 	$('.btn-add').click(function(){
 		$('#modal-add').modal('show')
+		$('input').val('')
 		$("input").focus(function(){
 			if ($(this).next().attr('class') == 'error-noti') {
 				$(this).next().remove();

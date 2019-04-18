@@ -25,7 +25,9 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
+            @permission('add-product')
             <a href="#" class="btn btn-info btn-add">Add new product</a>
+            @endpermission
             <ul class="nav navbar-right panel_toolbox">
               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
               </li>
@@ -52,7 +54,7 @@
                   <th>Name</th>
                   <th>Category</th>
                   <th>Brand</th>
-                  <th>Price</th>
+                  <th>Price (VND)</th>
                   <th>Price with discount</th>
                   <th>Creator</th>
                   <th>Create at</th>
@@ -67,6 +69,7 @@
     </div>
   </div>
 </div>
+
 
 {{-- Add product --}}
 <div class="modal fade" id="modal-add">
@@ -87,7 +90,7 @@
             <input type="text" class="form-control" id="product-code-add" name="product-code">
 
             <label for="">Category<span class="required"> *</span></label>
-            <select class="form-control" id="category-add" name="branch">
+            <select class="form-control" id="category-add" name="category">
               @foreach($categories as $item)
               <option value="{{ $item->id }}">{{ $item->name }}</option>
               @endforeach
@@ -100,7 +103,7 @@
             <input type="text" class="form-control" id="brand-add" name="brand">
 
             <label for="">Price<span class="required"> *</span></label>
-            <input type="number" class="form-control" id="price-add" name="price">
+            <input type="text" class="form-control" id="price-add" name="price">
 
             <label for="">Description</label>
             <textarea type="text" class="form-control" id="description-add" name="description" rows="3"></textarea>
@@ -119,7 +122,7 @@
   </div>
 </div>
 
-{{-- Edit cate --}}
+{{-- Edit product --}}
 <div class="modal fade" id="modal-edit">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -154,7 +157,7 @@
             <input type="text" class="form-control" id="brand-edit" name="brand">
 
             <label for="">Price<span class="required"> *</span></label>
-            <input type="number" class="form-control" id="price-edit" name="price">
+            <input type="text" class="form-control" id="price-edit" name="price">
 
             <label for="">Description</label>
             <textarea type="text" class="form-control" id="description-edit" name="description" rows="3"></textarea>
@@ -176,12 +179,137 @@
 
 {{-- Add picture --}}
 <div class="modal fade" id="modal-add-pic">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="width: 75%">
     <div class="modal-content">
-      <form action="admin/upload-image" class="dropzone" id="myDropzone">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit picture</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row images-product">
+
+        </div>
+        <form action="/admin/image" method="POST" class="dropzone" id="myDropzone">
+          @csrf
+          <input type="hidden" class="form-control" id="id-add-pic" name="product_id">
+          <div class="fallback">
+            <input name="file" type="file" multiple />
+          </div>
+
+        </form>
+      </div> 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="submit-pic">Submit</button>
+
+      </div>
+    
+    </div>
+  </div>
+</div>
+
+{{-- Detail --}}
+<div class="modal fade" id="modal-show">
+  <div class="modal-dialog" style="width: 80%;">
+    <div class="modal-content"> 
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Detail product: <span class="name-product"></span></h4>
+        </div>
+        <div class="modal-body">
+          <a href="#" class="btn btn-primary btn-add-product">Add new product</a>
+          <div class="form-group">
+            <input type="hidden" class="form-control" id="product-id-detail" name="id">
+            <table id="productDetailTable" class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>Product Code</th>
+                  <th>Size</th>
+                  <th>Color</th>
+                  <th>Quantity</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+{{-- Add product detail --}}
+<div class="modal fade" id="modal-add-product">
+  <div class="modal-dialog">
+    <div class="modal-content"> 
+      <form action="" id="form-add-product" method="POST" role="form" enctype="multipart/form-data">
         @csrf
-        <div class="fallback">
-          <input name="file" type="file" multiple />
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          @permission('add-detail-product')
+          <h4 class="modal-title">Add new product</h4>
+          @endpermission
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">Size<span class="required"> *</span></label>
+            <select class="form-control" id="size-add" name="size">
+              @foreach($sizes as $item)
+              <option value="{{ $item->id }}">{{ $item->value }}</option>
+              @endforeach
+            </select>
+
+            <label for="">Color<span class="required"> *</span></label>
+            <input type="text" class="form-control" id="color-add" name="color">
+            
+            <label for="">Quantity<span class="required"> *</span></label>
+            <input type="number" class="form-control" id="quantity-add" name="quantity">
+          </div> 
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{-- Edit product detail --}}
+<div class="modal fade" id="modal-edit-product">
+  <div class="modal-dialog">
+    <div class="modal-content"> 
+      <form action="" id="form-edit-product" method="POST" role="form" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Edit product</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <input type="hidden" class="form-control" id="id-edit-product" name="id">
+
+            <label for="">Size<span class="required"> *</span></label>
+            <select class="form-control" id="size-edit" name="size">
+              @foreach($sizes as $item)
+              <option value="{{ $item->id }}">{{ $item->value }}</option>
+              @endforeach
+            </select>
+
+            <label for="">Color<span class="required"> *</span></label>
+            <input type="text" class="form-control" id="color-edit" name="color_id">
+            
+            <label for="">Quantity<span class="required"> *</span></label>
+            <input type="number" class="form-control" id="quantity-edit" name="quantity">
+          </div> 
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Edit</button>
         </div>
       </form>
     </div>
@@ -210,9 +338,7 @@
       ]
     });
   });
-  
 </script> 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
 <script type="text/javascript" src="/js/manager/product.js"></script>
 
 @endsection

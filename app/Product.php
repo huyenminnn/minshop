@@ -17,4 +17,14 @@ class Product extends Model
     public function category(){
     	return $this->belongsTo('App\Category');
     }
+    
+    //1 sp co nhieu detail
+    public function productDetail(){
+        return $this->hasMany('App\ProductDetail','product_id','id');
+    }
+
+    //1 sp co nhieu image
+    public function images(){
+        return $this->hasMany('App\Image','product_id','id');
+    }
 }

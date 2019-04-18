@@ -79,7 +79,7 @@
       </div>
       <div class="modal-body">
         <h2  style="text-align: center;">Employee Info</h2>
-        <img id="avatar" style="height: 250px;width: 50%; margin-left: 25%; margin-bottom: 20px;">
+        <img class="img-circle" id="avatar" style="height: 250px;width: 250px; margin-left: 25%; margin-bottom: 20px;" >
         <table class="table table-hover">
           <tbody>
             <tr>
@@ -202,7 +202,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <img id="avatarShow-edit" style="height: 250px;width: 50%; margin:0px 25% 20px 25%;">
+            <img id="avatarShow-edit" class="img-circle" style="height: 250px;width: 50%; margin:0px 25% 20px 25%;">
             <input type="hidden" class="form-control" id="id-edit" name="id">
 
             <label for="">Name<span class="required"> *</span></label>

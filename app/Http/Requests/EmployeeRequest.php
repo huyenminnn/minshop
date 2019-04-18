@@ -25,13 +25,12 @@ class EmployeeRequest extends FormRequest
     {
         return [
             'name'=>'required',
-            'email'=>'required|email',
+            'email'=>'required|email|unique:employees, email,'.$this->id,
             'gender'=>'required',
             'address'=>'required',
             'mobile'=>'required',
             'salary'=>'required',
             'branch'=>'required',
-            'avatar'=>'required',
         ];
     }
 
@@ -45,12 +44,12 @@ class EmployeeRequest extends FormRequest
         return [
             'name.required' => 'Name is required!',
             'email.required' => 'Email is required!',
+            'email.unique' => 'Email is unique!',
             'gender.required' => 'Gender is required!',
             'address.required' => 'Address is required!',
             'mobile.required' => 'Mobile is required!',
             'salary.required' => 'Salary is required!',
             'branch.required' => 'Branch is required!',
-            'avatar.required' => 'Avatar is required!',
         ];
     }
 }

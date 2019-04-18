@@ -4,7 +4,6 @@
 .error-noti{
 	color: red !important;
 }
-.dropzone{
-	width: 60%;
-	border-radius: 10px;
+#myDropzone{
+	border-radius: 30px !important;
 }

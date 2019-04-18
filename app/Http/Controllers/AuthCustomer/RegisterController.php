@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\AuthCustomer;
 
-use App\User;
+use App\Customer;
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -37,7 +38,9 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        // $this->middleware('guest');
+        $this->middleware('customer.guest');
+        
     }
 
     /**
@@ -50,7 +53,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
     }
@@ -63,9 +66,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        return Customer::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'mobile' => $data['mobile'],
+            'address' => $data['address'],
+            'gender' => $data['gender'],
+            'avatar' => 'none',
             'password' => Hash::make($data['password']),
         ]);
     }
@@ -79,6 +86,26 @@ class RegisterController extends Controller
      */
     protected function registered()
     {
-        return redirect('/login');
+        return redirect('/home');
+    }
+
+    /**
+     * Get the guard to be used during authentication. thau doi phan guard giong trg config
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard('customer');
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        return view('customerAuth.register');
     }
 }

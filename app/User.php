@@ -5,10 +5,12 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use EntrustUserTrait; // add this trait to your user model
 
     /**
      * The attributes that are mass assignable.
@@ -36,5 +38,11 @@ class User extends Authenticatable
     //1 nguoi them nhieu sp
     public function product(){
         return $this->hasMany('App\Product','user_id','id');
+    }
+
+    //1 nguoi co 1 role
+    public function roles()
+    {
+        return $this->belongsToMany('App\Role', 'role_user', 'user_id', 'role_id');
     }
 }

@@ -10,6 +10,10 @@ use App\Image;
 
 class ProductController extends Controller
 {
+    // public function __construct(){
+    //     $this->middleware('role:super_admin')->only('create');
+    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,16 +29,22 @@ class ProductController extends Controller
         $products = Product::get();
         return Datatables::of($products)
             ->addColumn('action', function ($product) {
-                return '<button type="button" class="btn btn-success btn-show" data-id="'.$product->id.'">Detail</button>
-                        <button type="button" class="btn btn-primary btn-pic" data-id="'.$product->id.'">Add pic</button>
+                $data = '<button type="button" class="btn btn-success btn-show" data-id="'.$product->id.'">Detail</button>';
+                if (Auth::user()->can(['edit-product', 'delete-product'])) {
+                    $data .= '<button type="button" class="btn btn-primary btn-pic" data-id="'.$product->id.'">Add pic</button>
                         <button type="button" class="btn btn-warning btn-edit" data-id="'.$product->id.'">Edit</button>
                         <button type="button" class="btn btn-danger btn-delete" data-id="'.$product->id.'">Delete</button>';
+                }
+                return $data;
             })
             ->editColumn('user_id', function($product) {
                 return $product->user->name;
             })
             ->editColumn('category_id', function($product) {
                 return $product->category->name;
+            })
+            ->editColumn('price', function($product) {
+                return number_format($product->price);
             })
             ->make(true);
     }
@@ -133,8 +143,8 @@ class ProductController extends Controller
         return response()->json(['data'=>'removed']);
     }
 
-    //deleteImage
-    public function deleteImage(){
-        
+    public function showInfoProduct($id){
+         $product = Product::where('slug',$id)->get();
+         return view('sale.info',['product'=>'product']);
     }
 }

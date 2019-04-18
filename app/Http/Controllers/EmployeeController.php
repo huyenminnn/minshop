@@ -27,8 +27,8 @@ class EmployeeController extends Controller
                         <button type="button" class="btn btn-warning btn-edit" data-id="'.$employee->id.'">Edit</button>
                         <button type="button" class="btn btn-danger btn-delete" data-id="'.$employee->id.'">Delete</button>';
             })
-            ->editColumn('avatar', function($employee) {
-                    return '<img style="width: 100px;height: 100px;" src="/storage/'.$employee->avatar.'">';
+            ->editColumn('avatar', function($employee){
+                    return '<img style="width: 100px;height: 100px;" src="/storage/'.$employee->avatar.'" class="img-circle">';
             })
             ->rawColumns(['avatar','action','created_at','updated_at'])
             ->make(true);
@@ -59,9 +59,10 @@ class EmployeeController extends Controller
         $employee->mobile = $request->mobile;
         $employee->branch = $request->branch;
         $employee->salary = $request->salary;
-        $avatar = $request->avatar->storeAs('avatars',$request->avatar->getClientOriginalName());
+        if ($request->avatar == '') {
+            $avatar = 'avatars/default-profile.png';
+        } else $avatar = $request->avatar->storeAs('avatars',$request->avatar->getClientOriginalName());
         $employee->avatar = $avatar;
-
         $employee->save();
         return $employee;
     }
@@ -110,7 +111,7 @@ class EmployeeController extends Controller
                 'mobile'=>$request->mobile,
             ]);
         } else{
-            $thumb = $request->avatar->storeAs('avatar',$request->avatar->getClientOriginalName());
+            $thumb = $request->avatar->storeAs('avatars',$request->avatar->getClientOriginalName());
             $employee->update([
                 'name'=>$request->name,
                 'email'=>$request->email,

@@ -1,9 +1,3 @@
-$.ajaxSetup({
-	headers: {
-		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	}
-});
-
 $(document).ready(function () {
 	$('body').on('click','.btn-show', function(){
 		$('#modal-show').modal('show')
@@ -161,28 +155,28 @@ $(document).ready(function () {
 			},
 			error: function(data, textStatus, jqXHR) {
 	           	if (data.responseJSON.errors.name) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.name[0]+"</p>" ).insertAfter( "#name-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.name[0]+"</p>" ).insertAfter( "#name-edit" );
 	           	}
 	           	if (data.responseJSON.errors.email) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.email[0]+"</p>" ).insertAfter( "#email-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.email[0]+"</p>" ).insertAfter( "#email-edit" );
 	           	}
 	           	if (data.responseJSON.errors.address) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.address[0]+"</p>" ).insertAfter( "#address-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.address[0]+"</p>" ).insertAfter( "#address-edit" );
 	           	}
 	           	if (data.responseJSON.errors.salary) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.salary[0]+"</p>" ).insertAfter( "#salary-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.salary[0]+"</p>" ).insertAfter( "#salary-edit" );
 	           	}
 	           	if (data.responseJSON.errors.avatar) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.avatar[0]+"</p>" ).insertAfter( "#avatar-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.avatar[0]+"</p>" ).insertAfter( "#avatar-edit" );
 	           	}
 	           	if (data.responseJSON.errors.mobile) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.mobile[0]+"</p>" ).insertAfter( "#mobile-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.mobile[0]+"</p>" ).insertAfter( "#mobile-edit" );
 	           	}
 	           	if (data.responseJSON.errors.branch) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.branch[0]+"</p>" ).insertAfter( "#branch-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.branch[0]+"</p>" ).insertAfter( "#branch-edit" );
 	           	}
 	           	if (data.responseJSON.errors.gender) {
-	           		$( '<p class="error-noti">'+data.responseJSON.errors.gender[0]+"</p>" ).insertAfter( "#gender-add" );
+	           		$( '<p class="error-noti">'+data.responseJSON.errors.gender[0]+"</p>" ).insertAfter( "#gender-edit" );
 	           	}
 	       },
 		})

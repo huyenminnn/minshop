@@ -39,7 +39,7 @@ class LoginController extends Controller
 
     protected function loggedOut()
     {
-        return redirect('/login');
+        return redirect('/home');
     }
 
     /**
@@ -59,6 +59,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('customerAuth.login');
+        // return view('customerAuth.login');
     }
+
 }
