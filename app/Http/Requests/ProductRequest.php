@@ -30,6 +30,7 @@ class ProductRequest extends FormRequest
             'slug'=>'required|unique:products,slug,'.$this->id,
             'brand'=>'required',
             'price'=>'required',
+            'thumbnail'=>'required',
         ];
     }
 
@@ -47,6 +48,7 @@ class ProductRequest extends FormRequest
             'slug.required' => 'Slug is required!',
             'brand.required' => 'Brand is required!',
             'price.required' => 'Price is required!',
+            'thumbnail.required' => 'Thumbnail is required!',
             'product_code.unique' => 'Product code is unique!',
             'slug.unique' => 'Slug is unique!',
             

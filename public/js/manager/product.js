@@ -86,6 +86,13 @@ $(document).ready(function () {
 			var val = $('#price-add').val()
 			var a = numeral(val).format('0,0')
 			$('#price-add').val(a)
+			$('#price-discount-add').val(a)
+		})
+
+		$('#price-discount-add').keyup(function(){
+			var val = $('#price-discount-add').val()
+			var a = numeral(val).format('0,0')
+			$('#price-discount-add').val(a)
 		})
 		
 	})
@@ -94,19 +101,27 @@ $(document).ready(function () {
 
 		e.preventDefault()
 		$('.error-noti').remove()
+
+		var data = new FormData();
+		if ($('#thumbnail-add')[0].files[0]) {
+			data.append('thumbnail',$('#thumbnail-add')[0].files[0])
+		} else data.append('thumbnail','')
+		data.append('name',$('#name-add').val())
+		data.append('product_code',$('#product-code-add').val())
+		data.append('category_id',$('#category-add').val())
+		data.append('slug',$('#slug-add').val())
+		data.append('price',numeral($('#price-add').val()).value())
+		data.append('discount_price',numeral($('#price-discount-add').val()).value())
+		data.append('brand',$('#brand-add').val())
+		data.append('description',tinymce.get('description-add').getContent())
+		data.append('product_info',tinymce.get('product-info-add').getContent())
+
 		$.ajax({
 			type: "post",
 			url: '/admin/product',
-			data: {
-				name: $('#name-add').val(),
-				product_code: $('#product-code-add').val(),
-				category_id: $('#category-add').val(),
-				slug: $('#slug-add').val(),
-				brand: $('#brand-add').val(),
-				price: numeral($('#price-add').val()).value(),
-				description: tinymce.get('description-add').getContent(),
-				product_info: tinymce.get('product-info-add').getContent(),
-			},
+			data: data,
+			processData: false,
+			contentType: false,
 			success: function(data, textStatus, jqXHR) {
 				$('#modal-add').modal('hide')
 				toastr.success('Add product success!')
@@ -118,6 +133,9 @@ $(document).ready(function () {
 				}
 				if (data.responseJSON.errors.slug) {
 					$( '<p class="error-noti">'+data.responseJSON.errors.slug[0]+"</p>" ).insertAfter( "#slug-add" );
+				}
+				if (data.responseJSON.errors.thumbnail) {
+					$( '<p class="error-noti">'+data.responseJSON.errors.thumbnail[0]+"</p>" ).insertAfter( "#thumbnail-add" );
 				}
 				if (data.responseJSON.errors.product_code) {
 					$( '<p class="error-noti">'+data.responseJSON.errors.product_code[0]+"</p>" ).insertAfter( "#product-code-add" );
@@ -152,6 +170,13 @@ $(document).ready(function () {
 			var val = $('#price-edit').val()
 			var a = numeral(val).format('0,0')
 			$('#price-edit').val(a)
+			$('#price-discount-edit').val(a)
+		})
+
+		$('#price-discount-edit').keyup(function(){
+			var val = $('#price-discount-edit').val()
+			var a = numeral(val).format('0,0')
+			$('#price-discount-edit').val(a)
 		})
 
 		var id = $(this).data('id')
@@ -167,8 +192,10 @@ $(document).ready(function () {
 				$('#category-edit').val(response.category_id)
 				$('#brand-edit').val(response.brand)
 				$('#price-edit').val(numeral(response.price).format('0,0'))
+				$('#price-discount-edit').val(numeral(response.discount_price).format('0,0'))
 				tinymce.get('description-edit').setContent(response.description)
 				tinymce.get('product-info-edit').setContent(response.product_info)
+				$('#thumbnailShow-edit').attr('src','/storage/'+response.thumbnail)
 			}
 		})
 	})
@@ -176,20 +203,28 @@ $(document).ready(function () {
 		e.preventDefault()
 		$('.error-noti').remove()
 		var id = $('#id-edit').val()
+
+		var data = new FormData();
+		data.append('id',id)
+		if ($('#thumbnail-edit')[0].files[0]) {
+			data.append('thumbnail',$('#thumbnail-edit')[0].files[0])
+		} else data.append('thumbnail','none')
+		data.append('name',$('#name-edit').val())
+		data.append('product_code',$('#product-code-edit').val())
+		data.append('category_id',$('#category-edit').val())
+		data.append('slug',$('#slug-edit').val())
+		data.append('price',numeral($('#price-edit').val()).value())
+		data.append('discount_price',numeral($('#price-discount-edit').val()).value())
+		data.append('brand',$('#brand-edit').val())
+		data.append('description',tinymce.get('description-edit').getContent())
+		data.append('product_info',tinymce.get('product-info-edit').getContent())
+
 		$.ajax({
 			type: 'post',
 			url: '/admin/product_edit/' + id,
-			data:{
-				id: id,
-				name: $('#name-edit').val(),
-				slug: $('#slug-edit').val(),
-				brand: $('#brand-edit').val(),
-				price: numeral($('#price-edit').val()).value(),
-				product_code: $('#product-code-edit').val(),
-				category_id: $('#category-edit').val(),
-				description: tinymce.get('description-edit').getContent(),
-				product_info: tinymce.get('product-info-edit').getContent(),
-			},
+			data: data,
+			processData: false,
+			contentType: false,
 			success: function (response){
 				toastr.success('Update product success!')
 				setTimeout(function () {

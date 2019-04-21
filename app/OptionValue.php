@@ -8,7 +8,7 @@ class OptionValue extends Model
 {
     protected $fillable = ['option_id','value'];
 
-    public function option(){
-    	return $this->belongsTo('App\Option');
+    public function product(){
+    	return $this->belongsTo('App\Product');
     }
 }

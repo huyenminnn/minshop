@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RoleRequest;
 use App\Role;
 use App\Permission;
+
 class RoleController extends Controller
 {
     /**
@@ -21,7 +22,7 @@ class RoleController extends Controller
 
     //DataTable
     public function getData(){
-        $roles = Role::get();
+        $roles = Role::orderBy('id', 'desc');
         return Datatables::of($roles)
             ->addColumn('action', function ($role) {
                 return '<button type="button" class="btn btn-success btn-show" data-id="'.$role->id.'">Detail</button>

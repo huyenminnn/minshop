@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['name','product_code','user_id','description','category_id','slug','brand','product_info','price','discount_price'];
+    protected $fillable = ['name','product_code','user_id','description','category_id','slug','brand','product_info','price','discount_price','thumbnail'];
 
     // 1 nguoi tao sp
     public function user(){
@@ -26,5 +26,9 @@ class Product extends Model
     //1 sp co nhieu image
     public function images(){
         return $this->hasMany('App\Image','product_id','id');
+    }
+
+    public function sizes(){
+        return $this->hasMany('App\OptionValue','product_id','id');
     }
 }

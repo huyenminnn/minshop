@@ -52,6 +52,7 @@
                 <tr>
                   <th>Product Code</th>
                   <th>Name</th>
+                  <th>Thumbnail</th>
                   <th>Category</th>
                   <th>Brand</th>
                   <th>Price (VND)</th>
@@ -80,6 +81,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Add new product</h4>
+
         </div>
         <div class="modal-body">
           <div class="form-group">
@@ -89,6 +91,9 @@
             <label for="">Product Code<span class="required"> *</span></label>
             <input type="text" class="form-control" id="product-code-add" name="product-code">
 
+            <label for="">Thumbnail<span class="required"> *</span></label>
+            <input type="file" class="form-control" id="thumbnail-add" name="thumbnail">
+  
             <label for="">Category<span class="required"> *</span></label>
             <select class="form-control" id="category-add" name="category">
               @foreach($categories as $item)
@@ -104,6 +109,9 @@
 
             <label for="">Price<span class="required"> *</span></label>
             <input type="text" class="form-control" id="price-add" name="price">
+
+            <label for="">Price discount<span class="required"> *</span></label>
+            <input type="text" class="form-control" id="price-discount-add" name="discount_price">
 
             <label for="">Description</label>
             <textarea type="text" class="form-control" id="description-add" name="description" rows="3"></textarea>
@@ -135,6 +143,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
+            <img id="thumbnailShow-edit" class="img-thumbnail" style="height: 250px;width: 250px; margin:0px 25% 20px 25%;">
             <input type="hidden" class="form-control" id="id-edit" name="id">
 
             <label for="">Name<span class="required"> *</span></label>
@@ -142,6 +151,9 @@
 
             <label for="">Product Code<span class="required"> *</span></label>
             <input type="text" class="form-control" id="product-code-edit" name="product-code">
+
+            <label for="">Thumbnail<span class="required"> *</span></label>
+            <input type="file" class="form-control" id="thumbnail-edit" name="thumbnail">
 
             <label for="">Category<span class="required"> *</span></label>
             <select class="form-control" id="category-edit" name="category">
@@ -158,6 +170,9 @@
 
             <label for="">Price<span class="required"> *</span></label>
             <input type="text" class="form-control" id="price-edit" name="price">
+
+            <label for="">Price discount<span class="required"> *</span></label>
+            <input type="text" class="form-control" id="price-discount-edit" name="discount_price">
 
             <label for="">Description</label>
             <textarea type="text" class="form-control" id="description-edit" name="description" rows="3"></textarea>
@@ -328,6 +343,7 @@
       columns: [
       { data: 'product_code', name: 'product_code' },
       { data: 'name', name: 'name' },
+      { data: 'thumbnail', name: 'thumbnail' },
       { data: 'category_id', name: 'category_id' },
       { data: 'brand', name: 'brand' },
       { data: 'price', name: 'price' },

@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $role = Role::get();
         View::share('roles', $role);
 
-        $products = Product::orderBy('id', 'desc')->get();
+        $products = Product::orderBy('id', 'desc')->take(8)->get();
         View::share('products', $products);
     }
 

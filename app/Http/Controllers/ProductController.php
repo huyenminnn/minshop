@@ -37,6 +37,9 @@ class ProductController extends Controller
                 }
                 return $data;
             })
+            ->editColumn('thumbnail', function($product) {
+                    return '<img style="width: 100px;height: 100px;" src="/storage/'.$product->thumbnail.'" class="img-thumbnail">';
+            })
             ->editColumn('user_id', function($product) {
                 return $product->user->name;
             })
@@ -46,6 +49,10 @@ class ProductController extends Controller
             ->editColumn('price', function($product) {
                 return number_format($product->price);
             })
+            ->editColumn('discount_price', function($product) {
+                return number_format($product->discount_price);
+            })
+            ->rawColumns(['thumbnail','action','created_at'])
             ->make(true);
     }
     /**
@@ -73,9 +80,14 @@ class ProductController extends Controller
         $product->product_code = $request->product_code;
         $product->brand = $request->brand;
         $product->price = $request->price;
+        $product->discount_price = $request->discount_price;
         $product->product_info = $request->product_info;
         $product->description = $request->description;
         $product->user_id = Auth::user()->id;
+        if ($request->thumbnail == '') {
+            $thumbnail = 'images/default-thumbnail.jpg';
+        } else $thumbnail = $request->thumbnail->storeAs('images',$request->thumbnail->getClientOriginalName());
+        $product->thumbnail = $thumbnail;
         $product->save();
         return $product;
     }
@@ -127,8 +139,37 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, $id)
     {
-        $product = Product::find($id)->update($request->all());
-        return response()->json(['data'=>$product]);
+        $product = Product::find($id);
+        if ($request->thumbnail == 'none') {
+            $product->update([
+                'name' => $request->name,
+                'slug' => $request->slug,
+                'category_id' => $request->category_id,
+                'product_code' => $request->product_code,
+                'brand' => $request->brand,
+                'price' => $request->price,
+                'discount_price' => $request->discount_price,
+                'product_info' => $request->product_info,
+                'description' => $request->description,
+                'user_id' => Auth::user()->id,
+            ]);
+        } else{
+            $thumb = $request->thumbnail->storeAs('images',$request->thumbnail->getClientOriginalName());
+            $product->update([
+                'name' => $request->name,
+                'slug' => $request->slug,
+                'category_id' => $request->category_id,
+                'product_code' => $request->product_code,
+                'brand' => $request->brand,
+                'price' => $request->price,
+                'discount_price' => $request->discount_price,
+                'product_info' => $request->product_info,
+                'description' => $request->description,
+                'user_id' => Auth::user()->id,
+                'thumbnail'=>$thumb,
+            ]);
+        }
+        return $product;
     }
 
     /**

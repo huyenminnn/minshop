@@ -63,89 +63,13 @@
 			<div class="inner-sec-shop px-lg-4 px-3">
 				<h3 class="tittle-w3layouts my-lg-4 my-4">New Arrivals for you </h3>
 				<div class="row">
-					<!-- /womens -->
-					{{-- <div class="col-md-3 product-men women_two">
-						<div class="product-googles-info googles">
-							<div class="men-pro-item">
-								<div class="men-thumb-item">
-									<img src="{{ asset('sale_assets/images/s1.jpg') }}" class="img-fluid" alt="">
-									<div class="men-cart-pro">
-										<div class="inner-men-cart-pro">
-											<a href="single.html" class="link-product-add-cart">Quick View</a>
-										</div>
-									</div>
-									<span class="product-new-top">New</span>
-								</div>
-								<div class="item-info-product">
-									<div class="info-product-price">
-										<div class="grid_meta">
-											<div class="product_price">
-												<h4>
-													<a href="single.html">Farenheit (Grey)</a>
-												</h4>
-												<div class="grid-price mt-2">
-													<span class="money ">$575.00</span>
-												</div>
-											</div>
-											<ul class="stars">
-												<li>
-													<a href="#">
-														<i class="fa fa-star" aria-hidden="true"></i>
-													</a>
-												</li>
-												<li>
-													<a href="#">
-														<i class="fa fa-star" aria-hidden="true"></i>
-													</a>
-												</li>
-												<li>
-													<a href="#">
-														<i class="fa fa-star" aria-hidden="true"></i>
-													</a>
-												</li>
-												<li>
-													<a href="#">
-														<i class="fa fa-star" aria-hidden="true"></i>
-													</a>
-												</li>
-												<li>
-													<a href="#">
-														<i class="fa fa-star-half-o" aria-hidden="true"></i>
-													</a>
-												</li>
-											</ul>
-										</div>
-										<div class="googles single-item hvr-outline-out">
-											<form action="#" method="post">
-												<input type="hidden" name="cmd" value="_cart">
-												<input type="hidden" name="add" value="1">
-												<input type="hidden" name="googles_item" value="Farenheit">
-												<input type="hidden" name="amount" value="575.00">
-												<button type="submit" class="googles-cart pgoogles-cart">
-													<i class="fas fa-cart-plus"></i>
-												</button>
-
-												
-											</form>
-
-										</div>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-							</div>
-						</div>
-					</div> --}}
 
 					@foreach($products as $product)
 					<div class="col-md-3 product-men women_two">
 						<div class="product-googles-info googles">
 							<div class="men-pro-item">
 								<div class="men-thumb-item">
-									@foreach($product->images as $key => $image)
-										@if($key == 0)
-										<img src="/storage/{{ $image->image }}" class="img-fluid" alt="" style="height: 350px;">
-										@endif
-									@endforeach
+									<img src="/storage/{{ $product->thumbnail }}" class="img-fluid" alt="" style="height: 350px;">
 									<div class="men-cart-pro">
 										<div class="inner-men-cart-pro">
 											<a href="/info/{{ $product->slug }}" class="link-product-add-cart">Quick View</a>
@@ -161,7 +85,7 @@
 													<a href="single.html">{{ $product->name }}</a>
 												</h4>
 												<div class="grid-price mt-2">
-													<span class="money ">{{ number_format($product->price) }} Đ</span>
+													<span class="money ">{{ number_format($product->discount_price) }} đ <del>{{ number_format($product->price) }} đ</del></span>
 												</div>
 											</div>
 											<ul class="stars">
@@ -193,9 +117,7 @@
 											</ul>
 										</div>
 										<div class="googles single-item hvr-outline-out">
-											<a href="/cart/add">
-												<button type="button" class="googles-cart pgoogles-cart" ><i class="fas fa-cart-plus"></i></button>
-											</a>
+											<button type="button" class="googles-cart add-to-cart" data-id="{{ $product->id }}"><i class="fas fa-cart-plus"></i></button>
 										</div>
 									</div>
 									<div class="clearfix"></div>
@@ -205,9 +127,10 @@
 					</div>
 					@endforeach
 				</div>
+				
 				<!-- //womens -->
 				<!-- /mens -->
-				<div class="row mt-lg-3 mt-0">
+				{{-- <div class="row mt-lg-3 mt-0">
 					<!-- /womens -->
 					<div class="col-md-3 product-men women_two">
 						<div class="product-googles-info googles">
@@ -493,7 +416,7 @@
 						</div>
 					</div>
 					<!-- /mens -->
-				</div>
+				</div> --}}
 				<!--//row-->
 				<!--/meddle-->
 				<div class="row">
@@ -1120,5 +1043,320 @@
 				<!-- //clients-sec -->
 			</div>
 		</div>
+
+		{{-- Modal --}}
+		<div class="modal fade modal-add-to-cart">
+			<div class="modal-dialog" style="width: 80% !important; max-width: 1000px !important">
+				<div class="modal-content">
+					<div class="modal-header">
+						{{-- <h2 class="modal-title" style="padding-left: 5%; padding-top: 10px;">OPTION</h2> --}}
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form id="form-choose-product" method="POST" role="form" enctype="multipart/form-data">
+						<div class="modal-body">
+							<section class="banner-bottom-wthreelayouts py-3">
+								@csrf
+								<input type="hidden" name="id" id="product-id">
+								<input type="hidden" name="product-detail" id="product-detail">
+								<div class="container">
+									<div class="inner-sec-shop pt-lg-4 pt-3">
+										<div class="row">
+											<div class="col-lg-4 single-right-left ">
+												<div class="grid images_3_of_2">
+													<div class="flexslider1">
+														<ul id="slide" style="max-width: 100% !important">
+														</ul>
+														<div class="clearfix"></div>
+													</div>
+												</div>
+											</div>
+											<div class="col-lg-8 single-right-left simpleCart_shelfItem">
+												<h3 id="name-product"></h3>
+												<p><span class="item_price"></span>
+													{{-- <del>$1,199</del> --}}
+												</p>
+												<div class="rating1">
+													<ul class="stars">
+														<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+														<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+														<li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+														<li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>
+														<li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
+													</ul>
+												</div>
+												{{-- <div class="description">
+													<h5>Check delivery, payment options and charges at your location</h5>
+													<form action="#" method="post">
+														<input class="form-control" type="text" name="Email" placeholder="Please enter..." required="">
+														<input type="submit" value="Check">
+													</form>
+												</div> --}}
+												<div class="color-quality row" style="margin-bottom: 20px;">
+													<div class="color-quality-right col-lg-6">
+														<h5>Size :</h5>
+														<select id="sizes" class="frm-field required sect" name="size">					
+														</select>
+													</div>
+													<div class="color-quality-right col-lg-6">
+														<h5>Color :</h5>
+														<select id="colors" class="frm-field required sect" name="color">							
+														</select>
+													</div>
+													
+												</div>
+												<div class="color-quality-right">
+													<label><h5>Quantity :</h5></label> 
+													<input type="number" name="quantity" value="1" id="quantity">(<span id="quantity-product" style="font-weight: bold;"></span> products left)
+													
+												</div>
+												
+											</div>
+											<div class="clearfix"> </div>
+										</div>
+									</div>
+								</div>
+							</section>
+						</div>
+						<div class="modal-footer">
+							<div class="occasion-cart">
+								<div class="googles single-item singlepage">
+									<button type="submit" class="googles-cart pgoogles-cart" id="submit-cart">
+										
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 	</section>
+@endsection
+@section('script')
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<!--search jQuery-->
+<script src="{{ asset('sale_assets/js/modernizr-2.6.2.min.js') }}"></script>
+<script src="{{ asset('sale_assets/js/classie-search.js') }}"></script>
+<script src="{{ asset('sale_assets/js/demo1-search.js') }}"></script>
+<!--//search jQuery-->
+<!-- cart-js -->
+<script src="{{ asset('sale_assets/js/minicart.js') }}"></script>
+<script>
+	googles.render();
+
+	googles.cart.on('googles_checkout', function (evt) {
+		var items, len, i;
+
+		if (this.subtotal() > 0) {
+			items = this.items();
+
+			for (i = 0, len = items.length; i < len; i++) {}
+		}
+});
+</script>
+<!-- //cart-js -->
+<script>
+	$(document).ready(function () {
+		$(".button-log a").click(function () {
+			$(".overlay-login").fadeToggle(200);
+			$(this).toggleClass('btn-open').toggleClass('btn-close');
+		});
+	});
+	$('.overlay-close1').on('click', function () {
+		$(".overlay-login").fadeToggle(200);
+		$(".button-log a").toggleClass('btn-open').toggleClass('btn-close');
+		open = false;
+	});
+</script>
+<!-- carousel -->
+<!-- Count-down -->
+<script src="{{ asset('sale_assets/js/simplyCountdown.js') }}"></script>
+<script>
+	var d = new Date();
+	simplyCountdown('simply-countdown-custom', {
+		year: d.getFullYear(),
+		month: d.getMonth() + 2,
+		day: 25
+	});
+</script>
+
+<!-- price range (top products) Slide -->
+<script src="{{ asset('sale_assets/js/jquery-ui.js') }}"></script>
+<script>
+	//<![CDATA[ 
+	$(window).load(function () {
+		$("#slider-range").slider({
+			range: true,
+			min: 0,
+			max: 9000,
+			values: [50, 6000],
+			slide: function (event, ui) {
+				$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+			}
+		});
+		$("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+
+	}); //]]>
+</script>
+<!-- single -->
+<script src="{{ asset('sale_assets/js/imagezoom.js') }}"></script>
+<!-- single -->
+<!-- script for responsive tabs -->
+<script src="{{ asset('sale_assets/js/easy-responsive-tabs.js') }}"></script>
+<script>
+	$(document).ready(function () {
+		$('#horizontalTab').easyResponsiveTabs({
+			type: 'default', //Types: default, vertical, accordion           
+			width: 'auto', //auto or any width like 600px
+			fit: true, // 100% fit in a container
+			closed: 'accordion', // Start closed if in accordion view
+			activate: function (event) { // Callback function if tab is switched
+				var $tab = $(this);
+				var $info = $('#tabInfo');
+				var $name = $('span', $info);
+				$name.text($tab.text());
+				$info.show();
+			}
+		});
+		$('#verticalTab').easyResponsiveTabs({
+			type: 'vertical',
+			width: 'auto',
+			fit: true
+		});
+	});
+</script>
+<!-- FlexSlider -->
+<script src="{{ asset('sale_assets/js/jquery.flexslider.js') }}"></script>
+<script>
+	// Can also be used with $(document).ready()
+	$(window).load(function () {
+		$('.flexslider1').flexslider({
+			animation: "slide",
+			controlNav: "thumbnails"
+		});
+	});
+</script>
+		<!-- //FlexSlider-->
+<!--// Count-down -->
+<script src="{{ asset('sale_assets/js/owl.carousel.js') }}"></script>
+<script>
+	$(document).ready(function () {
+		$('.owl-carousel').owlCarousel({
+			loop: true,
+			margin: 10,
+			responsiveClass: true,
+			responsive: {
+				0: {
+					items: 1,
+					nav: true
+				},
+				600: {
+					items: 2,
+					nav: false
+				},
+				900: {
+					items: 3,
+					nav: false
+				},
+				1000: {
+					items: 4,
+					nav: true,
+					loop: false,
+					margin: 20
+				}
+			}
+		})
+	})
+</script>
+
+<!-- //end-smooth-scrolling -->
+
+
+<!-- dropdown nav -->
+<script>
+	$(document).ready(function () {
+		$(".dropdown").hover(
+			function () {
+				$('.dropdown-menu', this).stop(true, true).slideDown("fast");
+				$(this).toggleClass('open');
+			},
+			function () {
+				$('.dropdown-menu', this).stop(true, true).slideUp("fast");
+				$(this).toggleClass('open');
+			}
+			);
+	});
+</script>
+<!-- //dropdown nav -->
+<script src="{{ asset('sale_assets/js/move-top.js') }}"></script>
+<script src="{{ asset('sale_assets/js/easing.js') }}"></script>
+<script>
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event) {
+			event.preventDefault();
+			$('html,body').animate({
+				scrollTop: $(this.hash).offset().top
+			}, 900);
+		});
+	});
+</script>
+<script>
+	$(document).ready(function() {
+            /*
+		var defaults = {
+			  containerID: 'toTop', // fading element id
+			containerHoverID: 'toTopHover', // fading element hover id
+			scrollSpeed: 1200,
+			easingType: 'linear' 
+		 };
+		 */
+
+		 $().UItoTop({
+		 	easingType: 'easeOutQuart'
+		 });
+
+		});
+	</script>
+	<!--// end-smoth-scrolling -->
+	
+	<script src="{{ asset('sale_assets/js/bootstrap.js') }}">
+		
+	</script>
+	<script type="text/javascript">
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		$(document).ready(function(){
+
+			$('#form-login').submit(function(e){
+				e.preventDefault()
+				$.ajax({
+					type: 'post',
+					url: '/login',
+					data:{
+						email: $('#exampleInputEmail1').val(),
+						password: $('#exampleInputPassword1').val(),
+					},
+					success: function (response){
+						location.reload()
+					},
+					error: function(data, textStatus, jqXHR) {
+						if (data.responseJSON.errors) {
+							$('#form-login').prepend(`<p style="text-align: center; margin-bottom: 10px">
+								<strong style="color: red;">Email or password is incorrect!</strong>
+								</p>`)
+						}
+					},
+				})
+			})
+		})
+	</script>
+	
+	<script type="text/javascript" src="js/sale/cart.js"></script>
+	<!-- js file -->
 @endsection

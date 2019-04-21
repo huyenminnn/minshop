@@ -114,7 +114,7 @@
   </div>
 </div>
 
-{{-- Add cate --}}
+{{-- Add user --}}
 <div class="modal fade" id="modal-add">
   <div class="modal-dialog">
     <div class="modal-content"> 
@@ -155,7 +155,7 @@
   </div>
 </div>
 
-{{-- Edit cate --}}
+{{-- Edit user --}}
 <div class="modal fade" id="modal-edit">
   <div class="modal-dialog">
     <div class="modal-content">

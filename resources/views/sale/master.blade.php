@@ -24,11 +24,21 @@
 	<link rel="stylesheet" href="{{ asset('sale_assets/css/shop.css') }}" type="text/css" />
 	<link rel="stylesheet" href="{{ asset('sale_assets/css/owl.carousel.css') }}" type="text/css" media="all">
 	<link rel="stylesheet" href="{{ asset('sale_assets/css/owl.theme.css') }}" type="text/css" media="all">
+	<link rel="stylesheet" href="{{ asset('sale_assets/css/flexslider.css') }}" type="text/css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ asset('sale_assets/css/jquery-ui1.css') }}">
 	<link href="{{ asset('sale_assets/css/style.css') }}" rel='stylesheet' type='text/css' />
 	<link href="{{ asset('sale_assets/css/fontawesome-all.css') }}" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{{ asset('sale_assets/css/checkout.css') }}">
+	<link href="{{ asset('sale_assets/css/easy-responsive-tabs.css') }}" rel='stylesheet' type='text/css' />
 	<link href="///fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
 	<link href="///fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800"
 	rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
+	<link href="{{ asset('sale_assets/css/simplyCountdown.css') }}" rel='stylesheet' type='text/css' />
+	{{-- Toastr --}}
+  	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+
 </head>
 
 <body>
@@ -62,12 +72,13 @@
 							</a>
 						</li>
 						<li class="galssescart galssescart2 cart cart box_1">
-								<button class="top_googles_cart" type="submit" name="submit" id="checkout-cart">
-									Giỏ hàng
-									<i class="fas fa-cart-arrow-down"></i>
-								</button>
+							<button class="top_googles_cart" type="submit" name="submit" id="checkout-cart">
+								Giỏ hàng
+								<i class="fas fa-cart-arrow-down"></i>
+							</button>
 						</li>
 					</ul>
+					
 					<!---->
 					<div class="overlay-login text-left">
 						<button type="button" class="overlay-close1">
@@ -427,204 +438,61 @@
 </footer>
 <!-- //footer -->
 
-<!--jQuery-->
-<script src="{{ asset('sale_assets/js/jquery-2.2.3.min.js') }}"></script>
-<!-- newsletter modal -->
-<!-- Modal -->
-<!-- Modal -->
-{{-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+{{-- Modal --}}
+<div class="modal fade modal-cart">
+	<div class="modal-dialog" style="width: 80% !important; max-width: 1000px !important">
 		<div class="modal-content">
 			<div class="modal-header">
-
+				<h4 class="modal-title">Your cart</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
+
 			</div>
-			<div class="modal-body text-center p-5 mx-auto mw-100">
-				<h6>Join our newsletter and get</h6>
-				<h3>50% Off for your first Pair of Eye wear</h3>
-				<div class="login newsletter">
-					<form action="#" method="post">
-						<div class="form-group">
-							<label class="mb-2">Email address</label>
-							<input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="" required="">
-						</div>
-						<button type="submit" class="btn btn-primary submit mb-4">Get 50% Off</button>
-					</form>
-					<p class="text-center">
-						<a href="#">No thanks I want to pay full Price</a>
-					</p>
-				</div>
+			<div class="modal-body text-center p-5 mw-100">
+				<table id="cartTable" class="table table-bordered table-striped nowrap" style="width: 100%">
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th>Image</th>
+							<th>Size</th>
+							<th>Color</th>
+							<th>Quantity</th>
+							<th>Price</th>
+							<th>Subtotal</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+				</table>
+
 			</div>
 
+			<div class="text-right" style="padding:0px 5% 20px;">
+				<h6>Total (Without tax): <span id="subtotal"></span></h6>
+				<h6>TAX (10%): <span id="tax"></span></h6>
+				<h4 style="color: red;">TOTAL: <span id="total"></span></h4>
+
+			</div>
+
+			<div class="modal-footer" style="padding-right: 5%">
+				<a href="{{ asset('/checkout') }}" ><button type="submit" class="btn btn-primary btn-checkout">CHECK OUT</button></a>
+			</div>
 		</div>
+
 	</div>
-</div> --}}
-<!-- // modal -->
-
-<!--search jQuery-->
-<script src="{{ asset('sale_assets/js/modernizr-2.6.2.min.js') }}"></script>
-<script src="{{ asset('sale_assets/js/classie-search.js') }}"></script>
-<script src="{{ asset('sale_assets/js/demo1-search.js') }}"></script>
-<!--//search jQuery-->
-<!-- cart-js -->
-<script src="{{ asset('sale_assets/js/minicart.js') }}"></script>
-<script>
-	googles.render();
-
-	googles.cart.on('googles_checkout', function (evt) {
-		var items, len, i;
-
-		if (this.subtotal() > 0) {
-			items = this.items();
-
-			for (i = 0, len = items.length; i < len; i++) {}
+</div>
+<!--jQuery-->
+<script src="{{ asset('sale_assets/js/jquery-2.2.3.min.js') }}"></script>
+<script type="text/javascript">
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
-});
-</script>
-<!-- //cart-js -->
-<script>
-	$(document).ready(function () {
-		$(".button-log a").click(function () {
-			$(".overlay-login").fadeToggle(200);
-			$(this).toggleClass('btn-open').toggleClass('btn-close');
-		});
-	});
-	$('.overlay-close1').on('click', function () {
-		$(".overlay-login").fadeToggle(200);
-		$(".button-log a").toggleClass('btn-open').toggleClass('btn-close');
-		open = false;
 	});
 </script>
-<!-- carousel -->
-<!-- Count-down -->
-<script src="{{ asset('sale_assets/js/simplyCountdown.js') }}"></script>
-<link href="{{ asset('sale_assets/css/simplyCountdown.css') }}" rel='stylesheet' type='text/css' />
-<script>
-	var d = new Date();
-	simplyCountdown('simply-countdown-custom', {
-		year: d.getFullYear(),
-		month: d.getMonth() + 2,
-		day: 25
-	});
-</script>
-<!--// Count-down -->
-<script src="{{ asset('sale_assets/js/owl.carousel.js') }}"></script>
-<script>
-	$(document).ready(function () {
-		$('.owl-carousel').owlCarousel({
-			loop: true,
-			margin: 10,
-			responsiveClass: true,
-			responsive: {
-				0: {
-					items: 1,
-					nav: true
-				},
-				600: {
-					items: 2,
-					nav: false
-				},
-				900: {
-					items: 3,
-					nav: false
-				},
-				1000: {
-					items: 4,
-					nav: true,
-					loop: false,
-					margin: 20
-				}
-			}
-		})
-	})
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" type="text/javascript" charset="utf-8" async defer></script>
 
-<!-- //end-smooth-scrolling -->
-
-
-<!-- dropdown nav -->
-<script>
-	$(document).ready(function () {
-		$(".dropdown").hover(
-			function () {
-				$('.dropdown-menu', this).stop(true, true).slideDown("fast");
-				$(this).toggleClass('open');
-			},
-			function () {
-				$('.dropdown-menu', this).stop(true, true).slideUp("fast");
-				$(this).toggleClass('open');
-			}
-			);
-	});
-</script>
-<!-- //dropdown nav -->
-<script src="{{ asset('sale_assets/js/move-top.js') }}"></script>
-<script src="{{ asset('sale_assets/js/easing.js') }}"></script>
-<script>
-	jQuery(document).ready(function($) {
-		$(".scroll").click(function(event) {
-			event.preventDefault();
-			$('html,body').animate({
-				scrollTop: $(this.hash).offset().top
-			}, 900);
-		});
-	});
-</script>
-<script>
-	$(document).ready(function() {
-            /*
-		var defaults = {
-			  containerID: 'toTop', // fading element id
-			containerHoverID: 'toTopHover', // fading element hover id
-			scrollSpeed: 1200,
-			easingType: 'linear' 
-		 };
-		 */
-
-		 $().UItoTop({
-		 	easingType: 'easeOutQuart'
-		 });
-
-		});
-	</script>
-	<!--// end-smoth-scrolling -->
-	
-	<script src="{{ asset('sale_assets/js/bootstrap.js') }}">
-		
-	</script><script type="text/javascript">
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-		$(document).ready(function(){
-
-			$('#form-login').submit(function(e){
-				e.preventDefault()
-				$.ajax({
-					type: 'post',
-					url: '/login',
-					data:{
-						email: $('#exampleInputEmail1').val(),
-						password: $('#exampleInputPassword1').val(),
-					},
-					success: function (response){
-						location.reload()
-					},
-					error: function(data, textStatus, jqXHR) {
-						if (data.responseJSON.errors) {
-							$('#form-login').prepend(`<p style="text-align: center; margin-bottom: 10px">
-								<strong style="color: red;">Email or password is incorrect!</strong>
-								</p>`)
-						}
-					},
-				})
-			})
-		})
-	</script>
-	<!-- js file -->
+@yield('script')
 </body>
 
 </html>

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CustomerRequest;
 use App\Customer;
+
 class CustomerController extends Controller
 {
     /**

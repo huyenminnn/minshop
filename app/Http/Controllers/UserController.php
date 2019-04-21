@@ -137,7 +137,6 @@ class UserController extends Controller
                 'avatar'=>$thumb,
             ]);
         }
-        // $user->roles()->updateExistingPivot($request->role, ['role_id'=>$request->role]);
         
         DB::table('role_user')
             ->where('user_id', $user->id)

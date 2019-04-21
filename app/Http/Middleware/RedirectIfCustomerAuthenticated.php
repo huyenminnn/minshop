@@ -18,7 +18,7 @@ class RedirectIfCustomerAuthenticated
     {   
         //da dang nhap r
         if (Auth::guard('customer')->check()) {
-            return redirect('/home');
+            return redirect('/');
         }
         return $next($request);
     }

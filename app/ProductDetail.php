@@ -12,4 +12,8 @@ class ProductDetail extends Model
     public function product(){
     	return $this->belongsTo('App\Product');
     }
+
+    public function size_product(){
+    	return $this->belongsTo('App\OptionValue','size','id');
+    }
 }

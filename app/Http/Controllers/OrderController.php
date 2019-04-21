@@ -108,4 +108,9 @@ class OrderController extends Controller
     {
         //
     }
+
+    //new order Online
+    public function orderOnline(){
+        
+    }
 }

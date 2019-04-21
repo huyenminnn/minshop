@@ -91,7 +91,7 @@ Route::prefix('admin')->group(function(){
 // Route::get('login', 'AuthCustomer\LoginController@showLoginForm')->name('customer-login');
 Route::post('/login', 'AuthCustomer\LoginController@login');
 Route::post('/logout', 'AuthCustomer\LoginController@logout')->name('customer-logout');
-Route::get('/home', function() {
+Route::get('/', function() {
     return view('sale.home');
 });
 Route::get('register', 'AuthCustomer\RegisterController@showRegistrationForm')->name('register');
@@ -99,17 +99,19 @@ Route::post('register', 'AuthCustomer\RegisterController@register');
 Route::get('/info/{id}', 'ProductController@showInfoProduct');
 
 Route::prefix('cart')->group(function(){
-    Route::get('/add', 'CartController@add');
+    Route::post('/add/{id}', 'CartController@add');
+    Route::get('/show/{id}', 'CartController@show');
+    Route::get('/getData', 'CartController@getData');
+    Route::get('/total', 'CartController@getTotal');
+    Route::post('/delete-product/{id}', 'CartController@deleteProduct');
+    Route::post('/minus-product/{id}', 'CartController@minusProduct');
+    Route::post('/plus-product/{id}', 'CartController@plusProduct');
 });
-Route::get('/test',function(){
-    // dd(Cart::content());
-
-    // Cart::update(Cart::content()[0])
-    // Cart::add('293ad', 'Product 1', 1, 9.99, ['size' => 'large']);
-    // 
-    $user = App\Role::find(1);
-    foreach ($user->permissions as $value) {
-        echo($value->pivot->role_id);
-    }
-    // dd($user->permissions());
-});
+Route::get('/checkout', 'CartController@checkout');
+Route::post('/orderOnline', 'OrderController@orderOnline');
+// Route::get('/test',function(){
+//     $user = App\Role::find(1);
+//     foreach ($user->permissions as $value) {
+//         echo($value->pivot->role_id);
+//     }
+// });
