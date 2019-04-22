@@ -58,12 +58,15 @@ $(document).ready(function(){
 						})				
 					})
 					
-					
+					if (product_detail.quantity == 0) {
+						$('#submit-cart').text('Close')
+					}
 					$('#quantity').keyup(function(){
 						if ($(this).val() > product_detail.quantity) {
 							$(this).val(product_detail.quantity)
 						}
-						if ($(this).val() < 1) {
+						
+						if ($(this).val() < 0) {
 							$(this).val(1)
 						}
 					})
@@ -98,36 +101,6 @@ $(document).ready(function(){
 			});
 		}
 		
-	})
-
-	$('#checkout-cart').click(function(){
-		$('.modal-cart').modal('show')
-		$.ajax({
-			type: 'get',
-			url: '/cart/total',   
-			success: function (response){
-				$('#subtotal').html(response[0]+ 'VND')
-				$('#tax').html(response[1]+ 'VND')
-				$('#total').html(response[2]+ 'VND')
-			}
-		})
-		$('#cartTable').DataTable({
-			processing: true,
-			serverSide: true,
-			destroy: true,
-			ajax: '/cart/getData',
-			columns: [
-			{ data: 'name', name: 'name' },
-			{ data: 'thumbnail', name: 'thumbnail' },
-			{ data: 'options.size', name: 'option.size' },
-			{ data: 'options.color', name: 'option.color' },
-			{ data: 'qty', name: 'qty' },
-			{ data: 'price', name: 'price' },
-			{ data: 'subtotal', name: 'subtotal' },
-			{ data: 'action', name: 'action' }
-			],
-
-		});
 	})
 
 	$('body').on('click','.btn-delete',function(){

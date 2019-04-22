@@ -70,7 +70,29 @@
   </div>
 </div>
 
-
+<div class="modal fade modal-delete">
+  <div class="modal-dialog">
+    <div class="modal-content"> 
+      <form action="" id="form-delete" method="POST" role="form" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Delete</h4>
+        </div>
+        <input type="hidden" name="orderid" id="order_id">
+        <div class="modal-body">
+          <label for="">Reject delete</label>
+          <textarea type="text" class="form-control" id="reject" name="reject" rows="3"></textarea>
+        </div> 
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('script')

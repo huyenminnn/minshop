@@ -73,6 +73,8 @@
             <div class="menu_section">
               <h3>General</h3>
               <ul class="nav side-menu">
+                <li><a href="/admin/dashboard"><i class="fa fa-sticky-note"></i> Dashboard</a></li>
+                
                 @role('super-admin')
                 <li><a href="/admin/user"><i class="fa fa-users"></i> Users</a></li>
                 @endrole
@@ -84,12 +86,12 @@
                     <li><a href="{{ route('getOrder', ['type' => 'notconfirmed']) }}">Not confirmed</a></li>
                     <li><a href="{{ route('getOrder', ['type' => 'confirmed']) }}">Confirmed</a></li>
                     <li><a href="{{ route('getOrder', ['type' => 'delivering']) }}">Delivering</a></li>
-                    <li><a href="{{ route('getOrder', ['type' => 'delivered']) }}">Delivered</a></li>
+                    <li><a href="{{ route('getOrder', ['type' => 'completed']) }}">Completed</a></li>
                     <li><a href="{{ route('getOrder', ['type' => 'canceled']) }}">Canceled</a></li>
                   </ul>
                 </li>
                 @endability
-                <li><a href="/admin/order-offline"><i class="fa fa-user"></i> Order Offline</a>
+                {{-- <li><a href="/admin/order-offline"><i class="fa fa-user"></i> Order Offline</a> --}}
                 </li>
                 <li><a href="/admin/customer"><i class="fa fa-user"></i> Customer</a>
                 </li>

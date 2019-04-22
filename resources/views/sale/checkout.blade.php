@@ -46,7 +46,7 @@
 					<h4>Add a new Details</h4>
 					<form action="" method="post" class="creditly-card-form agileinfo_form" id="form-payment">
 						@csrf
-						<input type="hidden" name="customer_id" value="{{ Auth::guard('customer')->id() }}">
+						<input type="hidden" name="customer_id" value="{{ Auth::guard('customer')->id() }}" id="customer_id">
 						<section class="creditly-wrapper wrapper">
 							<div class="information-wrapper">
 								<div class="first-row form-group">
@@ -78,15 +78,15 @@
 										<label class="control-label">Note: </label>
 										<input class="form-control" type="text" placeholder="Note" value="" name="note" id="note">
 									</div>
-									{{-- <div class="controls">
-										<label class="control-label">Address type: </label>
-										<select class="form-control option-w3ls">
-											<option>Office</option>
-											<option>Home</option>
-											<option>Commercial</option>
+									<div class="controls">
+										<label class="control-label">Delivery Unit: </label>
+										<select class="form-control option-w3ls" id="delivery" name="delivery_unit">
+											<option value="GHN">Giao hàng nhanh</option>
+											<option value="GHTK">Giao hàng tiết kiệm</option>
+											<option value="VP">Viettel Post</option>
 
 										</select>
-									</div> --}}
+									</div>
 								</div>
 								<button class="submit check_out">Delivery to this Address</button>
 							</div>
@@ -257,22 +257,13 @@
 </script>
 <script>
 	$(document).ready(function() {
-            /*
-            						var defaults = {
-            							  containerID: 'toTop', // fading element id
-            							containerHoverID: 'toTopHover', // fading element hover id
-            							scrollSpeed: 1200,
-            							easingType: 'linear' 
-            						 };
-            						 */
+	 $().UItoTop({
+	 	easingType: 'easeOutQuart'
+	 });
 
-            						 $().UItoTop({
-            						 	easingType: 'easeOutQuart'
-            						 });
-
-            						});
-            					</script>
-            					<!--// end-smoth-scrolling -->
-            					<script src="{{ asset('sale_assets/js/bootstrap.js') }}"></script>
-            					<script type="text/javascript" src="js/sale/checkout.js"></script>
-            					@endsection
+	});
+</script>
+<!--// end-smoth-scrolling -->
+<script src="{{ asset('sale_assets/js/bootstrap.js') }}"></script>
+<script type="text/javascript" src="js/sale/checkout.js"></script>
+@endsection

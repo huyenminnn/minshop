@@ -112,13 +112,13 @@
 							<!---->
 							@else
 							<ul class="mega-menu ">
-								<li><a href="#" class="text-light"> Profile</a></li>
-								<li>
+								<li><a href="/history" class="text-light"> History Orders</a></li>
+								{{-- <li>
 									<a href="#"  class="text-light">
 										Setting
 									</a>
 								</li>
-								<li><a href="#"  class="text-light">Help</a></li>
+								<li><a href="#"  class="text-light">Help</a></li> --}}
 								<li><a href="{{ asset('/logout') }}"  class="text-light" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fa fa-sign-out pull-right"></i>Log Out</a>
 									<form id="logout-form" action="{{ asset('/logout') }}" method="POST" style="display: none;">
 										@csrf
@@ -164,7 +164,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav nav-mega mx-auto">
 					<li class="nav-item active">
-						<a class="nav-link ml-lg-0" href="index.html">Home
+						<a class="nav-link ml-lg-0" href="/">Home
 							<span class="sr-only">(current)</span>
 						</a>
 					</li>
@@ -483,12 +483,63 @@
 </div>
 <!--jQuery-->
 <script src="{{ asset('sale_assets/js/jquery-2.2.3.min.js') }}"></script>
+<!--search jQuery-->
+<script src="{{ asset('sale_assets/js/modernizr-2.6.2.min.js') }}"></script>
+<script src="{{ asset('sale_assets/js/classie-search.js') }}"></script>
+<script src="{{ asset('sale_assets/js/demo1-search.js') }}"></script>
+<!--//search jQuery-->
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<!-- cart-js -->
+<script src="{{ asset('sale_assets/js/minicart.js') }}"></script>
+<script>
+	googles.render();
+
+	googles.cart.on('googles_checkout', function (evt) {
+		var items, len, i;
+
+		if (this.subtotal() > 0) {
+			items = this.items();
+
+			for (i = 0, len = items.length; i < len; i++) {}
+		}
+});
+</script>
 <script type="text/javascript">
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+	$('#checkout-cart').click(function(){
+		$('.modal-cart').modal('show')
+		$.ajax({
+			type: 'get',
+			url: '/cart/total',   
+			success: function (response){
+				$('#subtotal').html(response[0]+ 'VND')
+				$('#tax').html(response[1]+ 'VND')
+				$('#total').html(response[2]+ 'VND')
+			}
+		})
+		$('#cartTable').DataTable({
+			processing: true,
+			serverSide: true,
+			destroy: true,
+			ajax: '/cart/getData',
+			columns: [
+			{ data: 'name', name: 'name' },
+			{ data: 'thumbnail', name: 'thumbnail' },
+			{ data: 'options.size', name: 'option.size' },
+			{ data: 'options.color', name: 'option.color' },
+			{ data: 'qty', name: 'qty' },
+			{ data: 'price', name: 'price' },
+			{ data: 'subtotal', name: 'subtotal' },
+			{ data: 'action', name: 'action' }
+			],
+
+		});
+	})
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" type="text/javascript" charset="utf-8" async defer></script>
 

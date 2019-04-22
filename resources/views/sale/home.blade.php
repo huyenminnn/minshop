@@ -116,9 +116,11 @@
 												</li>
 											</ul>
 										</div>
+										@if(Auth::guard('customer')->check())
 										<div class="googles single-item hvr-outline-out">
 											<button type="button" class="googles-cart add-to-cart" data-id="{{ $product->id }}"><i class="fas fa-cart-plus"></i></button>
 										</div>
+										@endif
 									</div>
 									<div class="clearfix"></div>
 								</div>
@@ -1119,6 +1121,7 @@
 								</div>
 							</section>
 						</div>
+
 						<div class="modal-footer">
 							<div class="occasion-cart">
 								<div class="googles single-item singlepage">
@@ -1135,28 +1138,8 @@
 	</section>
 @endsection
 @section('script')
-<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-<!--search jQuery-->
-<script src="{{ asset('sale_assets/js/modernizr-2.6.2.min.js') }}"></script>
-<script src="{{ asset('sale_assets/js/classie-search.js') }}"></script>
-<script src="{{ asset('sale_assets/js/demo1-search.js') }}"></script>
-<!--//search jQuery-->
-<!-- cart-js -->
-<script src="{{ asset('sale_assets/js/minicart.js') }}"></script>
-<script>
-	googles.render();
 
-	googles.cart.on('googles_checkout', function (evt) {
-		var items, len, i;
 
-		if (this.subtotal() > 0) {
-			items = this.items();
-
-			for (i = 0, len = items.length; i < len; i++) {}
-		}
-});
-</script>
 <!-- //cart-js -->
 <script>
 	$(document).ready(function () {
@@ -1356,7 +1339,7 @@
 			})
 		})
 	</script>
-	
 	<script type="text/javascript" src="js/sale/cart.js"></script>
+	
 	<!-- js file -->
 @endsection

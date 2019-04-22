@@ -185,7 +185,43 @@ class ProductController extends Controller
     }
 
     public function showInfoProduct($id){
-         $product = Product::where('slug',$id)->get();
-         return view('sale.info',['product'=>'product']);
+        $product = Product::where('slug',$id)->first();
+        $product->price = number_format($product->price);
+        $product->discount_price = number_format($product->discount_price);
+        $productDetail = $product->productDetail;
+        $qty = 0;
+        foreach ($productDetail as $key => $value) {
+            $qty += $value->quantity;
+        }
+        if (count($productDetail) == 0 || $qty == 0) {
+            return view('sale.info', ['data'=>false,'quantity'=>0]);
+        } else {
+            $sizes = array();
+            $colors = array();
+
+            foreach ($productDetail as $key => $value) {
+                $size = $value->size_product;
+                if (!in_array($size, $sizes)) {
+                    $sizes[] = $size;
+                }
+                $color = $value->color_id;
+                if (!in_array($color, $colors)) {
+                    $colors[] = $color;
+                }
+            }
+            $images = Image::where('product_id',$product->id)->get();
+            return view('sale.info',['data'=>true, 'product'=>$product,'images'=>$images, 'products' => $productDetail, 'sizes'=>$sizes, 'colors'=>$colors]);           
+        }
+    }
+
+    public function getQuantity(Request $req, $id){
+        $product = Product::find($id);
+        $productDetail = $product->productDetail;
+        foreach ($productDetail as $key => $value) {
+            if ($value->color_id == $req->color && $value->size == $req->size) {
+                return ['data'=>$value->quantity,'detail'=>$value->id] ;
+            }
+        }
+        return ['data'=>0];
     }
 }

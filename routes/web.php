@@ -38,8 +38,10 @@ Route::prefix('admin')->group(function(){
         Route::get('/branch_showedit/{id}','BranchController@edit');
         Route::post('/branch_edit/{id}','BranchController@update');
         Route::resource('/branch','BranchController');
+     
+        Route::get('/dashboard','DashboardController@index');
+        Route::post('/getTime','DashboardController@getTime');
 
-        
 
         Route::group(['middleware' => 'role:super-admin'], function () {
             Route::get('/getUser','UserController@getData');
@@ -57,6 +59,7 @@ Route::prefix('admin')->group(function(){
             Route::get('/permission-of-role/{id}', 'RoleController@getPermission');
 
             Route::get('/changeRolePerms/{id}','RoleController@changeRolePerms');
+
         });
 
         Route::group(['middleware' => 'role:super-admin|manager'], function () {
@@ -81,6 +84,11 @@ Route::prefix('admin')->group(function(){
             Route::get('/order/{type}','OrderController@index')->name('getOrder');
             Route::get('/getOrder/{type}','OrderController@getData');
             Route::resource('/order','OrderController');
+
+            Route::post('/confirmOrder/{id}','OrderController@confirmOrder');
+            Route::post('/deliveryOrder/{id}','OrderController@deliveryOrder');
+            Route::post('/deleteOrder/{id}','OrderController@deleteOrder');
+            Route::post('/completeOrder/{id}','OrderController@completed');
         });
     });
 });
@@ -97,18 +105,27 @@ Route::get('/', function() {
 Route::get('register', 'AuthCustomer\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'AuthCustomer\RegisterController@register');
 Route::get('/info/{id}', 'ProductController@showInfoProduct');
+Route::post('/getQuantity/{id}', 'ProductController@getQuantity');
 
-Route::prefix('cart')->group(function(){
-    Route::post('/add/{id}', 'CartController@add');
-    Route::get('/show/{id}', 'CartController@show');
-    Route::get('/getData', 'CartController@getData');
-    Route::get('/total', 'CartController@getTotal');
-    Route::post('/delete-product/{id}', 'CartController@deleteProduct');
-    Route::post('/minus-product/{id}', 'CartController@minusProduct');
-    Route::post('/plus-product/{id}', 'CartController@plusProduct');
+Route::middleware('customer.auth')->group(function() {
+    Route::prefix('cart')->group(function(){
+        Route::post('/add/{id}', 'CartController@add');
+        Route::get('/show/{id}', 'CartController@show');
+        Route::get('/getData', 'CartController@getData');
+        Route::get('/total', 'CartController@getTotal');
+        Route::post('/delete-product/{id}', 'CartController@deleteProduct');
+        Route::post('/minus-product/{id}', 'CartController@minusProduct');
+        Route::post('/plus-product/{id}', 'CartController@plusProduct');
+    });
+
+    Route::get('/checkout', 'CartController@checkout');
+    Route::post('/orderOnline', 'OrderController@orderOnline');
+
+    Route::get('/history/{id}', 'OrderController@history');
+    Route::get('/history', 'OrderController@historyView');
+    Route::get('/detailOrder/{id}', 'OrderController@detailOrder');
+
 });
-Route::get('/checkout', 'CartController@checkout');
-Route::post('/orderOnline', 'OrderController@orderOnline');
 // Route::get('/test',function(){
 //     $user = App\Role::find(1);
 //     foreach ($user->permissions as $value) {

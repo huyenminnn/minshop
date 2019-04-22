@@ -76,12 +76,15 @@ $(document).ready(function(){
 			type: "post",
 			url: '/orderOnline',
 			data: {
-				name: $('#customer_name').val(),
-				mobile: $('#customer_mobile').val(),
+				customer_id: $('#customer_id').val(),
+				customer_name: $('#customer_name').val(),
+				customer_mobile: $('#customer_mobile').val(),
 				address: $('#address').val(),
 				note: $('#note').val(),
+				delivery_unit: $('#delivery').val(),
 			},
 			success: function(data, textStatus, jqXHR) {
+				window.location.replace('history')
 			},
 		});
 	})

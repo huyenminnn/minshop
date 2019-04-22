@@ -15,21 +15,25 @@ class CartController extends Controller
 	public function add(Request $req, $id){
 		$product = Product::find($req->product_id);
 		$productDetail = ProductDetail::find($id);
-    	// if (!$req->quantity < $productDetail->quantity) {
-    	// 	return error;
-    	// } else{
-    	// dd($id);
-		Cart::add($productDetail->id, $product->name, $req->quantity, $product->discount_price, ['size' => $productDetail->size_product->value,'color' => $productDetail->color_id, 'product_id' => $req->product_id]);
-		return Cart::content();
-    	// }
+		if ($req->quantity == 0) {
+			return ['data'=>0];
+		} else {
+			Cart::add($productDetail->id, $product->name, $req->quantity, $product->discount_price, ['size' => $productDetail->size_product->value,'color' => $productDetail->color_id, 'product_id' => $req->product_id]);
+			return Cart::content();
+		}
 	}
 
 	public function show($id){
 		$product = Product::find($id);
 		$product->price = number_format($product->price);
+		$product->discount_price = number_format($product->discount_price);
 		$productDetail = $product->productDetail;
+		$qty = 0;
+		foreach ($productDetail as $key => $value) {
+            $qty += $value->quantity;
+        }
 
-		if (count($productDetail) == 0) {
+		if (count($productDetail) == 0 || $qty == 0) {
 			return ['data'=>false];
 		} else {
 			$sizes = array();
