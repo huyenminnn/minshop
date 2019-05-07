@@ -69,7 +69,7 @@
 						<div class="product-googles-info googles">
 							<div class="men-pro-item">
 								<div class="men-thumb-item">
-									<img src="/storage/{{ $product->thumbnail }}" class="img-fluid" alt="" style="height: 350px;">
+									<img src="/storage/{{ $product->thumbnail }}" class="img-fluid" alt="" style="height: 400px;">
 									<div class="men-cart-pro">
 										<div class="inner-men-cart-pro">
 											<a href="/info/{{ $product->slug }}" class="link-product-add-cart">Quick View</a>

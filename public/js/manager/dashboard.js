@@ -1,6 +1,14 @@
 $(document).ready(function(){
+	var start = ''
+	var end = ''
+	form()
+
 	$('#form-check').submit(function(e){
 		e.preventDefault(e)
+		
+	})
+
+	function form(){
 		var start = $('#start_time').val()
 		var end = $("#end_time").val()
 		console.log(start)
@@ -31,5 +39,5 @@ $(document).ready(function(){
 				
 			}
 		})
-	})
+	}
 })

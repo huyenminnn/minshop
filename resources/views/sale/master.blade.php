@@ -169,7 +169,7 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="about.html">About</a>
+						<a class="nav-link" href="https://www.facebook.com/quynh.lam.7739">About</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -180,30 +180,17 @@
 						<li>
 							<div class="row">
 								<div class="col-md-4 media-list span4 text-left">
-									<h5 class="tittle-w3layouts-sub"> Tittle goes here </h5>
+									<h5 class="tittle-w3layouts-sub"> Category </h5>
 									<ul>
-										<li class="media-mini mt-3">
-											<a href="shop.html">Designer Glasses</a>
-										</li>
-										<li class="">
-											<a href="shop.html"> Ray-Ban</a>
-										</li>
-										<li>
-											<a href="shop.html">Prescription Glasses</a>
-										</li>
-										<li class="mt-3">
-											<h5>View more pages</h5>
-										</li>
+										@foreach($categories as $cate)
 										<li class="mt-2">
-											<a href="about.html">About</a>
+											<a href="#">{{ $cate->name }}</a>
 										</li>
-										<li>
-											<a href="customer.html">Customers</a>
-										</li>
+										@endforeach
 									</ul>
 								</div>
 								<div class="col-md-4 media-list span4 text-left">
-									<h5 class="tittle-w3layouts-sub"> Tittle goes here </h5>
+									<h5 class="tittle-w3layouts-sub"> Category </h5>
 									<div class="media-mini mt-3">
 										<a href="shop.html">
 											<img src="{{ asset('sale_assets/images/g2.jpg') }}" class="img-fluid" alt="">
@@ -317,7 +304,7 @@
 				</ul>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="contact.html">Contact</a>
+				<a class="nav-link" href="https://www.facebook.com/quynh.lam.7739">Contact</a>
 			</li>
 		</ul>
 

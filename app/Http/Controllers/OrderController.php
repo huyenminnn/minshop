@@ -127,6 +127,7 @@ class OrderController extends Controller
         $order = Order::find($id);
         $order->update([
             'status'=>'confirmed',
+            'user_id'=>Auth::id(),
         ]);
         return $order;
     }

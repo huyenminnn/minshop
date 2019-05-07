@@ -17,48 +17,39 @@ use Carbon\Carbon;
 class DashboardController extends Controller
 {
 	public function index(){
+		$start = Carbon::now()->subMonth(); 
+		$end = Carbon::now();
 		$employees = Employee::select(DB::raw('count(*)'))->get();
 		$customers = Customer::select(DB::raw('count(*)'))->get();
 		$products = Product::select(DB::raw('count(*)'))->get();
-		$orders = Order::select(DB::raw('count(*)'))->where('status', '=', 'delivered')->get();
-		$product_sold = OrderDetail::sum('quantity');
+		$orders = Order::select(DB::raw('count(*)'))
+			->where([
+				['status', '=', 'delivered'],
+				['updated_at', '>', $start],
+				['updated_at', '<', $end],
+			])->get();
+		$product_sold = OrderDetail::where([
+				['updated_at', '>', $start],
+				['updated_at', '<', $end],
+			])->sum('quantity');
 		$revenue = Order::sum('total');
 		return view('manager.dashboard',['employees'=>$employees[0]['count(*)'],'customers'=>$customers[0]['count(*)'],'products'=>$products[0]['count(*)'],'orders'=>$orders[0]['count(*)'],'product_sold'=>number_format($product_sold), 'revenue'=>number_format($revenue)]);
 	}
 
 	public function getTime(Request $req){
-		$start = Carbon::parse($req->start);
-		$end = Carbon::parse($req->end);
-		// $orders = Order::join('order_details','orders.order_code','=','order_details.order_id')
-		// 	->groupBy('product_id')
-		// 	->select('*',DB::raw('SUM(quantity) as total_products'))
-		// 	->where([
-		// 		['orders.status', '=', 'notconfirmed'],
-		// 		['orders.updated_at', '>', $start],
-		// 		['orders.updated_at', '<', $end],
-		// 	])
-			
-		// 	->orderBy('total_products','desc')
-		// 	->get();
+		if ($req->start=='' && $req->end=='') {
+			$start = Carbon::now()->subMonth(); 
+			$end = Carbon::now();
+		} else{
+			$start = Carbon::parse($req->start);
+			$end = Carbon::parse($req->end);
+		}	
 		$orders = OrderDetail::where([
 				['updated_at', '>', $start],
 				['updated_at', '<', $end],
 			])->get();
 		$products = array();
 		foreach ($orders as $key => $value) {
-			// if (!in_array($value->product_id, $products) ) {
-			// 	$product = $value->product_id;
-			// 	$quantity = $value->quantity;
-			// 	$products[]=$product;
-			// 	$quantitys[] = $quantity;
-			// } else {
-			// 	foreach ($products as $keyp => $valuep) {
-			// 		if ($valuep == $value->product_id) {
-			// 			$quantitys[$keyp] += $value->quantity;
-			// 			break;
-			// 		}
-			// 	}
-			// }
 			$i = 0;
 			foreach ($products as $keyp => $valuep) {			
 				if ($value->product_id == $valuep['id']) {
@@ -72,11 +63,7 @@ class DashboardController extends Controller
 				$product['quantity'] = $value->quantity;  
 				$products[] = $product;
 			}
-
 		}
-
-		
-		
 		usort($products,array($this,'cmp'));
 		foreach ($products as $key => $value) {
 			$product = Product::find($value['id']);
